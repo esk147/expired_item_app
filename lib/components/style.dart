@@ -1,0 +1,1 @@
+const double namespace = 40.0;
