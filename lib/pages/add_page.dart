@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:expried_item_app/components/style.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +13,7 @@ class AddPage extends StatefulWidget {
 class _AddPageState extends State<AddPage> {
   final _spaceControll = TextEditingController();
   late DateTime selectedDate;
-  String dropdownValue = 'all';
+  String dropdownValue = 'beauty';
 
   @override
   void dispose() {
@@ -33,7 +31,7 @@ class _AddPageState extends State<AddPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('add items'),
+        title: const Text('add item'),
         backgroundColor: Colors.indigo,
       ),
       body: GestureDetector(
@@ -52,7 +50,18 @@ class _AddPageState extends State<AddPage> {
                 'item name',
                 style: Theme.of(context).textTheme.headline4,
               ),
-              TextFormField(),
+              TextFormField(
+                controller: _spaceControll,
+                maxLength: 20,
+                keyboardType: TextInputType.text,
+                style: Theme.of(context).textTheme.bodyText1,
+                decoration: InputDecoration(
+                    hintText: 'write your item',
+                    hintStyle: Theme.of(context).textTheme.bodyText2,
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                    )),
+              ),
               const SizedBox(
                 height: namespace,
               ),
@@ -91,30 +100,23 @@ class _AddPageState extends State<AddPage> {
                       dropdownValue = newValue!;
                     });
                   },
-                  items: ['all', 'newest', 'oldest', 'food', 'etc']
+                  items: ['beauty', 'food', 'etc']
                       .map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Text(value),
                     );
                   }).toList()),
-                  const Spacer(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(
-                    width: 160,
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      child: const Text('취소'),
-                    ),
+              const Spacer(),
+              Container(
+                alignment: Alignment.center,
+                child: SizedBox(
+                  width: 300,
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    child: const Text('Add'),
                   ),
-                  SizedBox(
-                    width: 160,
-                    child: ElevatedButton(onPressed: () {},
-              child: const Text('추가')),
-                  ),
-                ],
+                ),
               ),
             ],
           ),

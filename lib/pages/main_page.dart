@@ -1,5 +1,4 @@
 import 'package:expried_item_app/pages/add_page.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ExpriedMain extends StatefulWidget {
@@ -10,7 +9,13 @@ class ExpriedMain extends StatefulWidget {
 }
 
 class _ExpriedMainState extends State<ExpriedMain> {
-  String dropdownValue = 'all';
+  String dropdownValue = 'newest';
+
+  final list = [
+    'item1',
+    'item2',
+    'item3',
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,7 +35,7 @@ class _ExpriedMainState extends State<ExpriedMain> {
                   dropdownValue = newValue!;
                 });
               },
-              items: ['all', 'newest', 'oldest', 'food', 'etc']
+              items: ['newest', 'oldest', 'beauty', 'food', 'etc']
                   .map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
@@ -49,14 +54,46 @@ class _ExpriedMainState extends State<ExpriedMain> {
         child: const Icon(Icons.add),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      body: ListView.builder(
+        itemCount: list.length,
+        itemBuilder: (context, index) {
+          return ExpriedListTile(name: list[index]);
+        },
+      ),
     );
   }
 
-  void _checkAndDelete() {
-
-  }
-  void _addNewItem(){
+  void _checkAndDelete() {}
+  void _addNewItem() {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => const AddPage()));
+  }
+}
+
+class ExpriedListTile extends StatelessWidget {
+  const ExpriedListTile({
+    Key? key,
+    required this.name,
+  }) : super(key: key);
+
+  final String name;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.yellow,
+      child: Row(
+        children: [
+          Text(
+            name,
+            style: Theme.of(context).textTheme.bodyText2,
+          ),
+          const Padding(
+            padding: EdgeInsets.only(left: 20),
+            child: Text('term box'),
+          ),
+        ],
+      ),
+    );
   }
 }
