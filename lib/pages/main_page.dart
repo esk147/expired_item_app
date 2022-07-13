@@ -11,6 +11,8 @@ class ExpriedMain extends StatefulWidget {
 class _ExpriedMainState extends State<ExpriedMain> {
   String dropdownValue = 'newest';
 
+  String searchString = '';
+
   final list = [
     'item1',
     'item2',
@@ -54,11 +56,40 @@ class _ExpriedMainState extends State<ExpriedMain> {
         child: const Icon(Icons.add),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      body: ListView.builder(
-        itemCount: list.length,
-        itemBuilder: (context, index) {
-          return ExpriedListTile(name: list[index]);
-        },
+      body: Column(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: TextField(
+              onChanged: (value) {
+                setState(() {
+                  searchString = value.toLowerCase();
+                });
+              },
+              decoration: const InputDecoration(
+                labelText: 'Search',
+                suffixIcon: Icon(Icons.search),
+              ),
+            ),
+          ),
+          Expanded(
+            child: ListView.separated(
+              padding: const EdgeInsets.all(15),
+              itemCount: list.length,
+              itemBuilder: (context, index) {
+                return ExpriedListTile(name: list[index]);
+              },
+              separatorBuilder: (context, index) {
+                return const Divider(
+                  height: 20,
+                );
+              },
+            ),
+          )
+        ],
       ),
     );
   }
@@ -84,13 +115,20 @@ class ExpriedListTile extends StatelessWidget {
       color: Colors.yellow,
       child: Row(
         children: [
-          Text(
-            name,
-            style: Theme.of(context).textTheme.bodyText2,
+          Padding(
+            padding: const EdgeInsets.only(left: 10),
+            child: Text(
+              name,
+              style: Theme.of(context).textTheme.headline6,
+            ),
           ),
-          const Padding(
-            padding: EdgeInsets.only(left: 20),
-            child: Text('term box'),
+          const Spacer(),
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: Text(
+              'term',
+              style: Theme.of(context).textTheme.headline6,
+            ),
           ),
         ],
       ),
