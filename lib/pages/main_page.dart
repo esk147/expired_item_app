@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expried_item_app/pages/add_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class ExpriedMain extends StatefulWidget {
   const ExpriedMain({Key? key}) : super(key: key);
@@ -10,9 +13,11 @@ class ExpriedMain extends StatefulWidget {
 
 class _ExpriedMainState extends State<ExpriedMain> {
   String dropdownValue = 'newest';
-
   String searchString = '';
 
+  static User? loginUser = FirebaseAuth.instance.currentUser;
+  final userReference = FirebaseFirestore.instance.collection(loginUser!.email.toString());
+  
   final list = [
     'item1',
     'item2',
@@ -51,11 +56,6 @@ class _ExpriedMainState extends State<ExpriedMain> {
                 );
               }).toList()),
         ),
-        actions: <Widget>[
-          IconButton(
-              onPressed: () => _checkAndDelete,
-              icon: const Icon(Icons.check, color: Colors.white))
-        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _addNewItem,
@@ -82,25 +82,72 @@ class _ExpriedMainState extends State<ExpriedMain> {
             ),
           ),
           Expanded(
-            child: ListView.separated(
-              padding: const EdgeInsets.all(15),
-              itemCount: list.length,
-              itemBuilder: (context, index) {
-                return ExpriedListTile(name: list[index],term: list2[index],);
-              },
-              separatorBuilder: (context, index) {
-                return const Divider(
-                  height: 20,
-                );
-              },
+            child: ListView(
+              children: <Widget>[
+                Container(
+                  height: 500,
+                  child: StreamBuilder<QuerySnapshot>(
+                    stream: userReference.orderBy('itemTerm',descending: true).snapshots(),
+                    builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
+                      if(snapshot.hasError) return Text('Error: ${snapshot.error}');
+                      switch (snapshot.connectionState) {
+                        case ConnectionState.waiting:
+                        return const Text('loading..');
+                        default:
+                        return ListView(
+                          children: snapshot.data!.docs.map((DocumentSnapshot document){
+                            return Card(
+                              elevation: 2,
+                              child: InkWell(
+                                onLongPress: () {
+                                  _showDialog(document);
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.all(15),
+                                  child: Column(
+                                    children: <Widget>[
+                                      Row(
+                                        children: [
+                                          Text(document['name']),
+                                          const Spacer(),
+                                          Text(document['itemTerm2'])
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        );
+                      }
+                    },
+                  ),
+                )
+              ],
             ),
+            // child: ListView.separated(
+            //   padding: const EdgeInsets.all(15),
+            //   itemCount: list.length,
+            //   itemBuilder: (context, index) {
+            //     return ExpriedListTile(name: list[index],term: list2[index],);
+            //   },
+            //   separatorBuilder: (context, index) {
+            //     return const Divider(
+            //       height: 20,
+            //     );
+            //   },
+            // ),
           )
         ],
       ),
     );
   }
 
-  void _checkAndDelete() {}
+  void _showDialog(DocumentSnapshot doc){
+
+  }
+
   void _addNewItem() {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => const AddPage()));

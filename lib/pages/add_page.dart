@@ -3,7 +3,6 @@ import 'package:expried_item_app/components/style.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/intl.dart';
 
 class AddPage extends StatefulWidget {
@@ -154,14 +153,15 @@ class _AddPageState extends State<AddPage> {
 
   void _createDoc() async {
     final User? user = FirebaseAuth.instance.currentUser;
-
     CollectionReference users =
         FirebaseFirestore.instance.collection(user!.email.toString());
     users.doc(_spaceControll.text).set({
       'name': _spaceControll.text,
       'category': dropdownValue,
-      'itemTerm': DateFormat('yyyy-MM-dd').format(selectedDate),
+      'itemTerm': DateFormat('yyyyMMdd').format(selectedDate),
+      'itemTerm2': DateFormat('yyyy-MM-dd').format(selectedDate),
       'addItem': DateFormat('yyyy-MM-dd').format(DateTime.now())
     });
+    Navigator.pop(context);
   }
 }
