@@ -18,6 +18,12 @@ class _ExpriedMainState extends State<ExpriedMain> {
     'item2',
     'item3',
   ];
+
+  final list2 = [
+    'term1',
+    'term2',
+    'term3',
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,7 +86,7 @@ class _ExpriedMainState extends State<ExpriedMain> {
               padding: const EdgeInsets.all(15),
               itemCount: list.length,
               itemBuilder: (context, index) {
-                return ExpriedListTile(name: list[index]);
+                return ExpriedListTile(name: list[index],term: list2[index],);
               },
               separatorBuilder: (context, index) {
                 return const Divider(
@@ -105,9 +111,11 @@ class ExpriedListTile extends StatelessWidget {
   const ExpriedListTile({
     Key? key,
     required this.name,
+    required this.term,
   }) : super(key: key);
 
   final String name;
+  final String term;
 
   @override
   Widget build(BuildContext context) {
@@ -126,7 +134,7 @@ class ExpriedListTile extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(right: 10),
             child: Text(
-              'term',
+              term,
               style: Theme.of(context).textTheme.headline6,
             ),
           ),

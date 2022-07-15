@@ -32,8 +32,8 @@ class _ExpriedAppState extends State<ExpriedApp> {
   }
   @override
   void initState() {
+    Firebase.initializeApp();
     super.initState();
-
   }
 
   @override
